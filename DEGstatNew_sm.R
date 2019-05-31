@@ -3,17 +3,12 @@ DEGstatNew_sm<-function(datamatrix,pval_cutoff,upperfoldchange_cutoff,lowerfoldc
   
           
           print("Yes, we are in the significant gene-finding extraction precedure");
-          #grep("\\?",rownames(datamatrix))
-         #datamatrix1<- datamatrix[-grep("\\?",rownames(datamatrix)),]
-         nrow(datamatrix)
+          nrow(datamatrix)
           myCPM<-cpm(datamatrix)
           thresh_myCPM <- myCPM > 0.5 ##Which values in myCPM are greater than 0.5?
           table(rowSums(thresh_myCPM)) ##Summary of how many TRUEs there are in each row
           keeprna <- rowSums(thresh_myCPM) >= 2 ##keep genes that have at least 2 TRUES in each row of thresh
           RNA_Data<-datamatrix
-         # grep("\\?",rownames(RNA_Data1))
-          #RNA_Data<- RNA_Data1[-grep("\\?",rownames(RNA_Data1)),]
-         # nrow(RNA_Data)#19685
           RNA_Data.keeprna <- RNA_Data[keeprna,] ##Subset the rows of countdata to keep the more highly expressed genes
           summary(keeprna)
           dim(RNA_Data.keeprna)#19603 genes 275 samples
@@ -44,8 +39,6 @@ DEGstatNew_sm<-function(datamatrix,pval_cutoff,upperfoldchange_cutoff,lowerfoldc
           #png("mean-variance-trend.png", 490, 350)
           setEPS()
           postscript(paste0(tissue,".",ctl.subtype,".vs.",exp.subtype,".DEG.mean_variance_trend.eps",sep=""))
-          ###postscript(file=sprintf("imagesDEG/mean_variance_trend%svs%s.eps",ctl.subtype,exp.subtype), onefile=TRUE, horizontal=FALSE)
-          #postscript(file=sprintf("imagesDEG/mean-variance-trend.Adenovs%s.eps",subtype), onefile=TRUE, horizontal=FALSE)
           par(mar = rep(5, 4))
           v_cntlvsrest_r <- voom(y_r,design_cntlvsrest_r,plot = TRUE)
           dev.off()
@@ -57,7 +50,6 @@ DEGstatNew_sm<-function(datamatrix,pval_cutoff,upperfoldchange_cutoff,lowerfoldc
           
           setEPS()
           postscript(paste0(tissue,".",ctl.subtype,".vs.",exp.subtype,".DEG.boxplot.normalization.eps",sep=""))
-          #postscript(file=sprintf("imagesDEG/boxplot.Adenovs%s.eps",subtype), onefile=TRUE, horizontal=FALSE)
           par(mfrow=c(1,2),mar = c(5, 5, 4, 2) + 0.1)
           #par(mar = rep(2, 4))
           par(cex.axis=0.3)##resizing the boxplot label
@@ -109,12 +101,8 @@ DEGstatNew_sm<-function(datamatrix,pval_cutoff,upperfoldchange_cutoff,lowerfoldc
           print(a$DG_Name)
           
           write.table(fURGlist_srt_cntlvsrest_r, file=paste0(tissue,".",ctl.subtype,".vs.",exp.subtype,".URG.csv",sep=""),sep=",",col.names = TRUE,row.names = FALSE)
-          #write.table(fURGlist_srt_cntlvsrest_r, paste("UG_ADENOvs",subtype, ".csv",sep=""), sep=",", row.names=FALSE, col.names=TRUE,quote=FALSE)
           write.table(fDRGlist_srt_cntlvsrest_r, file=paste0(tissue,".",ctl.subtype,".vs.",exp.subtype,".DRG.csv",sep=""),sep=",",col.names = TRUE,row.names = FALSE)
-          #write.table(fDRGlist_srt_cntlvsrest_r,paste("DG_ADENOvs",subtype, ".csv",sep=""), sep=",", row.names=FALSE, col.names=TRUE,quote=FALSE)
           write.table(fDEGlist_pvalFCfilt_cntlvsrest_r, file=paste0(tissue,".",ctl.subtype,".vs.",exp.subtype,".DEG.csv",sep=""),sep=",",col.names =TRUE,row.names = TRUE)
-          #write.table(fDEGlist_pvalFCfilt_cntlvsrest_r,paste("UG+DG_ADENOvs",subtype, ".csv",sep=""), sep=",", row.names=FALSE, col.names=TRUE,quote=FALSE)
-         
           top2_cntlvsrest_r$ID<-rownames(top2_cntlvsrest_r)
           
           
@@ -126,7 +114,6 @@ DEGstatNew_sm<-function(datamatrix,pval_cutoff,upperfoldchange_cutoff,lowerfoldc
           with(top2_cntlvsrest_r, plot(logFC, -log10(adj.P.Val), pch=10, main="Volcano plot", xlim=c(-5,3),ylim=c(0,yaxis.max)))
           with(subset(top2_cntlvsrest_r, adj.P.Val<pval_cutoff & logFC>upperfoldchange_cutoff), points(logFC, -log10(adj.P.Val), pch=yaxis.max,col="red"))
           with(subset(top2_cntlvsrest_r, adj.P.Val<pval_cutoff & logFC<lowerfoldchange_cutoff), points(logFC, -log10(adj.P.Val), pch=yaxis.max,col="green"))
-          #with(subset(top2_cntlvsrest_r, adj.P.Val<pval_cutoff & abs(logFC)>upperfoldchange_cutoff), textxy(logFC, -log10(adj.P.Val), labs=ID, cex=.87))###for genename printing on valcanoplot
           dev.off()
           
           
