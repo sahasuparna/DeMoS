@@ -1,13 +1,8 @@
 
-setwd("E:/reeditedsurvival")
-
 load("LmqcmData.RData")
 library(survival)
 library(survminer)
-###debug(utils:::unpackPkgZip)#######use this before using "install.packages" command if "unable to move temporary..." error comes
-###install.packages("survivalROC")
 library(survivalROC)
-##devtools::install_github("matthieugomez/statar")
 library(statar)##for x-tile
 
 ##########follow: "http://bioconnector.org/workshops/r-survival.html"##############
@@ -216,18 +211,6 @@ colnames(zscore_DEMIR_squavsrest1)<-colnames(TCGAPAAD_mirdat4)
 ####for all the dysregulated mirnas###
 exppattern_DEMIR_squavsrest<-matrix( nrow=nrow(TCGAPAAD_mirdat4), ncol=ncol(TCGAPAAD_mirdat4))
 
-#exppattern_DEMIR_squavsrest<-t(apply(zscore_DEMIR_squavsrest1, 1, function(x) ifelse(x > 0,"high expression","low expression")))##using mean
-####exppattern_DEMIR_squavsrest<-t(apply(zscore_DEMIR_squavsrest1, 1, function(x) ifelse(x > 1.96,"Over expression",ifelse(x < -1.96,"under expression","Non-differential expression"))))##need to be changed
-# for(i in 1:nrow(zscore_DEMIR_squavsrest1)) ##using median
-# {
-#   med_mir<-median(as.numeric(zscore_DEMIR_squavsrest1[i,]))
-#   for(j in 1:ncol(zscore_DEMIR_squavsrest1))
-#   {
-#      exppattern_DEMIR_squavsrest[i,j]<-ifelse(zscore_DEMIR_squavsrest1[i,j]>med_mir,"high expression","low expression")
-#   }
-# }
-
-
 require(statar)
 for(i in 1:nrow(zscore_DEMIR_squavsrest1)) ##using x-tile r
 {
@@ -242,7 +225,6 @@ zscore_DEMIR_squavsrest1<-as.data.frame(zscore_DEMIR_squavsrest1)
 
 
 
-#mySurv<-Surv(time=clinicalinfo_filt$days_to_death, event = clinicalinfo_filt$recordedStatus)
 
 # 1. Determine the optimal cutpoint of variables for single gene
 zscore_DEMIR_squavsrest1_trans<-t(zscore_DEMIR_squavsrest1)
@@ -265,25 +247,25 @@ genename2
 
 
 
-####for 1st mirna#####
+####for 1st mRNA#####
 library("survival")
 myfit <- survfit(Surv(days_to_death, recordedStatus) ~FGF9, data = res.cat)
 ggsurvplot(myfit, data = res.cat, risk.table = TRUE, conf.int = TRUE, pval=TRUE, legend.title=rownames(zscore_DEMIR_squavsrest1)[1],xlab = "Overall survival time (days to death)",
            risk.table.height=.20)
 
 
-####for 2nd mirna#####
+####for 2nd mRNA#####
 ##tt<-res.cut[,(2+2)]
 myfit <- survfit(Surv(days_to_death, recordedStatus) ~FGF18, data = res.cat)
 ggsurvplot(myfit, data = res.cat, risk.table = TRUE, conf.int = TRUE, pval=TRUE, legend.title=rownames(zscore_DEMIR_squavsrest1)[2],xlab = "Overall survival time (days to death)",
            risk.table.height=.20)
 
-####for 3rd mirna#####
+####for 3rd mRNA#####
 myfit <- survfit(Surv(days_to_death, recordedStatus) ~PPP1R9A, data = res.cat)
 ggsurvplot(myfit, data = res.cat, risk.table = TRUE, conf.int = TRUE, pval=TRUE, legend.title=rownames(zscore_DEMIR_squavsrest1)[3],xlab = "Overall survival time (days to death)",
            risk.table.height=.20)
 
-####for 4th mirna#####
+####for 4th mRNA####
 myfit <- survfit(Surv(days_to_death, recordedStatus) ~ERBB4, data = res.cat)
 ggsurvplot(myfit, data = res.cat, risk.table = TRUE, conf.int = TRUE, pval=TRUE, legend.title=rownames(zscore_DEMIR_squavsrest1)[4],xlab = "Overall survival time (days to death)",
            risk.table.height=.20)
@@ -293,42 +275,37 @@ myfit <- survfit(Surv(days_to_death, recordedStatus) ~DCDC2, data = res.cat)
 ggsurvplot(myfit, data = res.cat, risk.table = TRUE, conf.int = TRUE, pval=TRUE, legend.title=rownames(zscore_DEMIR_squavsrest1)[5],xlab = "Overall survival time (days to death)",
            risk.table.height=.20)
 
-####for 6th mirna#####
+####for 6th mRNA#####
 myfit <- survfit(Surv(days_to_death, recordedStatus) ~TOX3, data = res.cat)
 ggsurvplot(myfit, data = res.cat, risk.table = TRUE, conf.int = TRUE, pval=TRUE, legend.title=rownames(zscore_DEMIR_squavsrest1)[6],xlab = "Overall survival time (days to death)",
            risk.table.height=.20)
 
-####for 7th mirna#####
+####for 7th mRNA#####
 myfit <- survfit(Surv(days_to_death, recordedStatus) ~ARMC3, data = res.cat)
 ggsurvplot(myfit, data = res.cat, risk.table = TRUE, conf.int = TRUE, pval=TRUE, legend.title=rownames(zscore_DEMIR_squavsrest1)[7],xlab = "Overall survival time (days to death)",
            risk.table.height=.20)
 
-####for 8th mirna#####
+####for 8th mRNA#####
 myfit <- survfit(Surv(days_to_death, recordedStatus) ~DNALI1, data = res.cat)
 ggsurvplot(myfit, data = res.cat, risk.table = TRUE, conf.int = TRUE, pval=TRUE, legend.title=rownames(zscore_DEMIR_squavsrest1)[8],xlab = "Overall survival time (days to death)",
            risk.table.height=.20)
 
-####for 9th mirna#####
+####for 9th mRNA#####
 myfit <- survfit(Surv(days_to_death, recordedStatus) ~RGL3, data = res.cat)
 ggsurvplot(myfit, data = res.cat, risk.table = TRUE, conf.int = TRUE, pval=TRUE, legend.title=rownames(zscore_DEMIR_squavsrest1)[9],xlab = "Overall survival time (days to death)",
            risk.table.height=.20)
-####for 10th mirna#####
+####for 10th mRNA#####
 myfit <- survfit(Surv(days_to_death, recordedStatus) ~ENPP3, data = res.cat)
 ggsurvplot(myfit, data = res.cat, risk.table = TRUE, conf.int = TRUE, pval=TRUE, legend.title=rownames(zscore_DEMIR_squavsrest1)[10],xlab = "Overall survival time (days to death)",
            risk.table.height=.20)
 
-######for integrated signature (10 mrna together)##########
-
-####find multiple-genetic score(MGS)=sum(xi)-sum(xj)########
-##see http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0045894 ####
+######for integrated signature (10 mRNA together)##########
 
 MGS.10mir<-vector("integer", length=nrow(zscore_DEMIR_squavsrest1_trans))
 for(i in 1: nrow(zscore_DEMIR_squavsrest1_trans))
 {
   set.seed(300)###to keep the randomly picked training samples same everytime for the specified seed value
   cl <- kmeans(zscore_DEMIR_squavsrest1_trans[i,], 2)##here second parameter "2" is the number of cluster
-  ##plot(zscore_DEMIR_squavsrest1_trans[i,], col = cl$cluster)
-  #points(cl$centers, col = 1:2, pch = 8, cex = 2)
   gene.clust<-cl$cluster
   
   MGS.10mir[i]<- abs(mean(zscore_DEMIR_squavsrest1_trans[i,which(gene.clust==1)])-mean(zscore_DEMIR_squavsrest1_trans[i,which(gene.clust==2)])) 
@@ -344,28 +321,16 @@ names(mysurv_vec_forcutofffinding.integrated)[3]<-"Ten_mRNA_Signature"
 mysurv_vec_forcutofffinding.integrated<-mysurv_vec_forcutofffinding.integrated[which(!is.na(mysurv_vec_forcutofffinding.integrated$days_to_death)),]
 res.cut.integrated <- surv_cutpoint(mysurv_vec_forcutofffinding.integrated, time = "days_to_death", event = "recordedStatus",
                                     variables = colnames(mysurv_vec_forcutofffinding.integrated)[3])
-
 summary(res.cut.integrated)
 # 3. Categorize variables
 res.cat.integrated <- surv_categorize(res.cut.integrated)
 head(res.cat.integrated)
-
 myfit.integrated <- survfit(Surv(days_to_death, recordedStatus)~ Ten_mRNA_Signature , data = res.cat.integrated)
 ggsurvplot(myfit.integrated, data = res.cat.integrated, risk.table = TRUE, conf.int = TRUE, pval=TRUE, legend.title="Ten-mRNA Signature",xlab = "Overall survival time (days to death)",
            risk.table.height=.20)
 
 
 
-
-
-##############survivalROC###############
-############for 1st mirna##########
-####\references{Heagerty, P.J., Lumley, T., Pepe, M. S. (2000)
-###Time-dependent ROC Curves for Censored Survival Data and a Diagnostic
-###Marker \emph{Biometrics}, \bold{56}, 337 -- 344} 
-###\author{Patrick J. Heagerty }
-#####https://www.rdocumentation.org/packages/survivalROC/versions/1.0.1/topics/survivalROC ###
-#####https://cran.r-project.org/web/packages/survivalROC/survivalROC.pdf ####
 
 
 mayo1<-as.data.frame(cbind(res.cat$days_to_death,res.cat$recordedStatus,mysurv_vec_forcutofffinding$FGF9))
@@ -376,9 +341,8 @@ nobs <- NROW(mayo1)
 cutoff <- 365
 ##METHOD = KM
 
-##mayo11<-mayo1[which(!is.na(mayo1$event_time)),]
 mayo11<-mayo1
-NROW(mayo11)##59
+NROW(mayo11)
 
 Mayo4.21= survivalROC(Stime=mayo11$event_time,
                       status=mayo11$censor,
@@ -400,8 +364,6 @@ nrow(mayo1)##258
 nobs <- NROW(mayo1)
 cutoff <- 365
 ##METHOD = KM
-
-##mayo11<-mayo1[which(!is.na(mayo1$event_time)),]
 mayo11<-mayo1
 NROW(mayo11)##59
 
@@ -423,11 +385,8 @@ nrow(mayo1)##258
 
 nobs <- NROW(mayo1)
 cutoff <- 365
-##METHOD = KM
-
-##mayo11<-mayo1[which(!is.na(mayo1$event_time)),]
 mayo11<-mayo1
-NROW(mayo11)##59
+NROW(mayo11)
 
 Mayo4.21= survivalROC(Stime=mayo11$event_time,
                       status=mayo11$censor,
@@ -448,7 +407,6 @@ nobs <- NROW(mayo1)
 cutoff <- 365
 ##METHOD = KM
 
-##mayo11<-mayo1[which(!is.na(mayo1$event_time)),]
 mayo11<-mayo1
 NROW(mayo11)##59
 
@@ -471,7 +429,6 @@ nobs <- NROW(mayo1)
 cutoff <- 365
 ##METHOD = KM
 
-##mayo11<-mayo1[which(!is.na(mayo1$event_time)),]
 mayo11<-mayo1
 NROW(mayo11)##59
 
@@ -494,7 +451,6 @@ nobs <- NROW(mayo1)
 cutoff <- 365
 ##METHOD = KM
 
-##mayo11<-mayo1[which(!is.na(mayo1$event_time)),]
 mayo11<-mayo1
 NROW(mayo11)##59
 
@@ -517,9 +473,8 @@ nobs <- NROW(mayo1)
 cutoff <- 365
 ##METHOD = KM
 
-##mayo11<-mayo1[which(!is.na(mayo1$event_time)),]
 mayo11<-mayo1
-NROW(mayo11)##59
+NROW(mayo11)
 
 Mayo4.21= survivalROC(Stime=mayo11$event_time,
                       status=mayo11$censor,
@@ -534,15 +489,15 @@ abline(0,1)
 ############for 8th mirna##########
 mayo1<-as.data.frame(cbind(res.cat$days_to_death,res.cat$recordedStatus,mysurv_vec_forcutofffinding$DNALI1))
 colnames(mayo1)<-c("event_time","censor","marker_score")
-nrow(mayo1)##258
+nrow(mayo1)
 
 nobs <- NROW(mayo1)
 cutoff <- 365
 ##METHOD = KM
 abline(0,1)
-##mayo11<-mayo1[which(!is.na(mayo1$event_time)),]
+
 mayo11<-mayo1
-NROW(mayo11)##59
+NROW(mayo11)
 
 Mayo4.21= survivalROC(Stime=mayo11$event_time,
                       status=mayo11$censor,
@@ -565,7 +520,6 @@ nobs <- NROW(mayo1)
 cutoff <- 365
 ##METHOD = KM
 abline(0,1)
-##mayo11<-mayo1[which(!is.na(mayo1$event_time)),]
 mayo11<-mayo1
 NROW(mayo11)##59
 
@@ -588,7 +542,6 @@ nobs <- NROW(mayo1)
 cutoff <- 365
 ##METHOD = KM
 
-##mayo11<-mayo1[which(!is.na(mayo1$event_time)),]
 mayo11<-mayo1
 NROW(mayo11)##59
 
