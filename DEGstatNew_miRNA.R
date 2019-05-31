@@ -3,63 +3,45 @@ DEGstatNew_miRNA<-function(datamatrix,pval_cutoff,upperfoldchange_cutoff,lowerfo
   
           
           print("Yes, we are in the significant miRNA-finding extraction precedure");
-          #grep("\\?",rownames(datamatrix))
-         #datamatrix1<- datamatrix[-grep("\\?",rownames(datamatrix)),]
-         nrow(datamatrix)
           myCPM<-cpm(datamatrix)
           thresh_myCPM <- myCPM > 0.5 ##Which values in myCPM are greater than 0.5?
           table(rowSums(thresh_myCPM)) ##Summary of how many TRUEs there are in each row
           keeprna <- rowSums(thresh_myCPM) >= 2 ##keep genes that have at least 2 TRUES in each row of thresh
           RNA_Data<-datamatrix
-         # grep("\\?",rownames(RNA_Data1))
-          #RNA_Data<- RNA_Data1[-grep("\\?",rownames(RNA_Data1)),]
-         # nrow(RNA_Data)#19685
           RNA_Data.keeprna <- RNA_Data[keeprna,] ##Subset the rows of countdata to keep the more highly expressed genes
           summary(keeprna)
           dim(RNA_Data.keeprna)#19603 genes 275 samples
-      
           plot(myCPM[,1],RNA_Data[,1],ylab="tcga_rnadata[,1]")
           
           # Let us limit the x and y-axis so we can actually look to see what is happening at the smaller counts
           plot(myCPM[,1],RNA_Data[,1],ylim=c(0,5),xlim=c(0,5),ylab="tcga_rnadata[,1]")
           # Add a vertical line at 0.5 CPM
           abline(v=0.5)
-          
-          
+                   
           #######Convert counts to DGEList object for rna########
           y_r <- DGEList(RNA_Data.keeprna)
           names(y_r)### See what slots are stored in y
           # Library size information is stored in the samples slot
           y_r$samples
           nrow(y_r$samples)#275
-          
-          
-         
           ########*************for ADENO (control) vs cervical squamous cell carcinoma (SCC or experimental or rest) (rna)**********##########################
           ###Voom transform the data
           sample_clslabel_cntl.rest_r <- rep(c(ctl.subtype,exp.subtype),c(control.size, ncol(RNA_Data)- control.size))
           sample_clslabel_cntl.rest_r
           design_cntlvsrest_r<-model.matrix(~ sample_clslabel_cntl.rest_r)
           head(design_cntlvsrest_r,n=15)
-          #png("mean-variance-trend.png", 490, 350)
           setEPS()
           postscript(paste0(tissue,".",ctl.subtype,".vs.",exp.subtype,".DEmiRNA.mean_variance_trend.eps",sep=""))
-          ###postscript(file=sprintf("imagesDEG/mean_variance_trend%svs%s.eps",ctl.subtype,exp.subtype), onefile=TRUE, horizontal=FALSE)
-          #postscript(file=sprintf("imagesDEG/mean-variance-trend.Adenovs%s.eps",subtype), onefile=TRUE, horizontal=FALSE)
           par(mar = rep(5, 4))
           v_cntlvsrest_r <- voom(y_r,design_cntlvsrest_r,plot = TRUE)
           dev.off()
-          
           v_cntlvsrest_r
           names(v_cntlvsrest_r)
           v_cntlvsrest_r$E
           logcounts_cntlvsrest_r <- cpm(y_r,log=TRUE)
-          
           setEPS()
           postscript(paste0(tissue,".",ctl.subtype,".vs.",exp.subtype,".DEmiRNA.boxplot.normalization.eps",sep=""))
-          #postscript(file=sprintf("imagesDEG/boxplot.Adenovs%s.eps",subtype), onefile=TRUE, horizontal=FALSE)
           par(mfrow=c(1,2),mar = c(5, 5, 4, 2) + 0.1)
-          #par(mar = rep(2, 4))
           par(cex.axis=0.3)##resizing the boxplot label
           par(cex.lab=0.7)
           par(cex.main=0.8)
@@ -126,7 +108,6 @@ DEGstatNew_miRNA<-function(datamatrix,pval_cutoff,upperfoldchange_cutoff,lowerfo
           with(top2_cntlvsrest_r, plot(logFC, -log10(adj.P.Val), pch=10, main="Volcano plot", xlim=c(-5,3),ylim=c(0,yaxis.max)))
           with(subset(top2_cntlvsrest_r, adj.P.Val<pval_cutoff & logFC>upperfoldchange_cutoff), points(logFC, -log10(adj.P.Val), pch=yaxis.max,col="red"))
           with(subset(top2_cntlvsrest_r, adj.P.Val<pval_cutoff & logFC<lowerfoldchange_cutoff), points(logFC, -log10(adj.P.Val), pch=yaxis.max,col="green"))
-          #with(subset(top2_cntlvsrest_r, adj.P.Val<pval_cutoff & abs(logFC)>upperfoldchange_cutoff), textxy(logFC, -log10(adj.P.Val), labs=ID, cex=.87))###for genename printing on valcanoplot
           dev.off()
           
           
