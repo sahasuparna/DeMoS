@@ -1,7 +1,10 @@
 # DeMos-GeM
 #CESCclinicalMatrix.csv---> The file contains the clinical information of cervical cancer patients.
+
 #genomic_miRNA---> contains the miRNA expression profile of cervical cancer.
+
 #SCC_SAMPLEID.csv-->contails the sample id for SCC group patients.
+
 #cervical.ADENO.vs.SCC.DRmiRNA.csv--->contains the downregulated miRNA for ADENO vs SCC group.
 #cervical.ADENO.vs.SCC.URmiRNA.csv--->contains the upregulated miRNA for ADENO vs SCC group.
 DEGstat_NewmiRNA.R--> Function for finding the significantly expressed miRNA
