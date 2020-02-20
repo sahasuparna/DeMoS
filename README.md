@@ -1,4 +1,4 @@
-# DeMos-GeM
+# DeMos
 #CESCclinicalMatrix.csv---> The file contains the clinical information of cervical cancer patients.
 
 #genomic_miRNA---> contains the miRNA expression profile of cervical cancer.
